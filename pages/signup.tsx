@@ -9,21 +9,17 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {
-  signInWithGoogle,
-  signInEmailPassword,
-  logOut,
-} from '../firebase/authentication';
+import { signUpEmailPassword } from '../firebase/authentication';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 const theme = createTheme();
 
 export default function SignIn() {
+  const router = useRouter();
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
-  const router = useRouter();
 
   return (
     <ThemeProvider theme={theme}>
@@ -40,11 +36,14 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
           <Typography
             component='h1'
             variant='h5'
           >
-            Sign in
+            Sign up
           </Typography>
           <Box sx={{ mt: 1 }}>
             <TextField
@@ -54,7 +53,7 @@ export default function SignIn() {
               id='email'
               label='Email Address'
               name='email'
-              autoComplete='off'
+              autoComplete='email'
               autoFocus
               onChange={(e) => setEmail(e.target.value)}
               value={email || ''}
@@ -67,47 +66,32 @@ export default function SignIn() {
               label='Password'
               type='password'
               id='password'
-              autoComplete='off'
+              autoComplete='current-password'
               onChange={(e) => setPassword(e.target.value)}
               value={password || ''}
             />
 
             <Button
-              type='submit'
               fullWidth
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
               onClick={() => {
-                signInEmailPassword(email, password, () => {
-                  router.push('/post');
+                signUpEmailPassword(email, password, () => {
+                  router.push('/');
                 });
               }}
             >
-              Sign In
+              Sign up
             </Button>
-
             <Button
-              type='submit'
               fullWidth
               variant='contained'
               onClick={() => {
-                signInWithGoogle(() => {
-                  router.push('/post');
-                });
+                router.push('/');
               }}
             >
-              Sign In using Google
+              Back
             </Button>
-            <Grid container>
-              <Grid item>
-                <Link
-                  href='/signup'
-                  variant='body2'
-                >
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
