@@ -1,49 +1,49 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
-import CameraIcon from '@mui/icons-material/PhotoCamera';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Button from "@mui/material/Button";
+import CameraIcon from "@mui/icons-material/PhotoCamera";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { Input, TextField } from '@mui/material';
+import { styled } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { Input, TextField } from "@mui/material";
 
-import PostController, { ModelObject } from '../controller/PostController';
-import { Timestamp } from 'firebase/firestore';
+import PostController, { ModelObject } from "../controller/PostController";
+import { Timestamp } from "firebase/firestore";
 
-import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
-import { storage } from '../firebase/firebase';
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase/firebase";
 
-import AuthContext from '../store/auth.context';
-import { useRouter } from 'next/router';
+import AuthContext from "../store/auth.context";
+import { useRouter } from "next/router";
 
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
 
-import { logOut } from '../firebase/authentication';
+import { logOut } from "../firebase/authentication";
 const theme = createTheme();
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
+  "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
   },
-  '& .MuiDialogActions-root': {
+  "& .MuiDialogActions-root": {
     padding: theme.spacing(1),
   },
 }));
@@ -68,7 +68,7 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
           aria-label='close'
           onClick={onClose}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             right: 8,
             top: 8,
             color: (theme) => theme.palette.grey[500],
@@ -92,9 +92,9 @@ export default function Post() {
   const [id, setId] = useState<any>();
 
   const [addData, setAddData] = useState<ModelObject>({
-    title: '',
-    description: '',
-    image: '',
+    title: "",
+    description: "",
+    image: "",
   });
 
   const { user, loading } = useContext(AuthContext);
@@ -122,56 +122,56 @@ export default function Post() {
   };
 
   const handleDelete = async (id: any) => {
-    if (confirm('Delete Post?')) {
+    if (confirm("Delete Post?")) {
       await requestDelete(id)
         .then(() => {
-          alert('Delete Successful!');
+          alert("Delete Successful!");
           displayPosts();
         })
         .catch((err) => {
-          alert('Delete Failed: ' + err);
+          alert("Delete Failed: " + err);
         });
     }
   };
 
   const addPost = async () => {
-    if (addData.title == '' || addData.description == '') {
-      alert('Please fill up all the fields. Thank you');
+    if (addData.title == "" || addData.description == "") {
+      alert("Please fill up all the fields. Thank you");
     } else {
       const response = await requestAdd(addData).catch((err: any) => {
         alert(err);
       });
-      alert('Posted successfully');
+      alert("Posted successfully");
       displayPosts();
       setAddData({
-        title: '',
-        description: '',
-        image: '',
+        title: "",
+        description: "",
+        image: "",
       });
     }
   };
 
   const updatePost = async () => {
-    if (addData.title == '' || addData.description == '') {
-      alert('Please fill up all the fields. Thank you');
+    if (addData.title == "" || addData.description == "") {
+      alert("Please fill up all the fields. Thank you");
     } else {
       const response = await requestUpdate(id, addData).catch((err: any) => {
         alert(err);
       });
-      alert('Post updated successfully');
+      alert("Post updated successfully");
       displayPosts();
       setAddData({
-        title: '',
-        description: '',
-        image: '',
+        title: "",
+        description: "",
+        image: "",
       });
-      setId('');
+      setId("");
     }
   };
 
   const displayPosts = useCallback(async () => {
     const _posts = await requestFetch().catch((err) => {
-      alert('Failed to load reported user' + err);
+      alert("Failed to load reported user" + err);
     });
     const posts: Array<ModelObject> = _posts!.map(
       ({ id, title, description, image }) => ({
@@ -197,7 +197,7 @@ export default function Post() {
         reloadUser();
       } else {
         if (!user) {
-          router.push('/');
+          router.push("/");
         } else {
           displayPosts();
         }
@@ -370,13 +370,13 @@ export default function Post() {
             component='div'
             sx={{ flexGrow: 1 }}
           >
-            DevFest 2022
+            DevFest 2023
           </Typography>
           <Button
             color='inherit'
             onClick={() => {
               logOut();
-              router.push('/');
+              router.push("/");
             }}
           >
             Logout
@@ -387,7 +387,7 @@ export default function Post() {
         {/* Hero unit */}
         <Box
           sx={{
-            bgcolor: 'background.paper',
+            bgcolor: "background.paper",
             pt: 8,
             pb: 6,
           }}
@@ -437,9 +437,9 @@ export default function Post() {
               >
                 <Card
                   sx={{
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
                   }}
                 >
                   <CardMedia
@@ -449,8 +449,8 @@ export default function Post() {
                       //   pt: '56.25%',
                     }}
                     image={
-                      item?.image == ''
-                        ? 'https://via.placeholder.com/300'
+                      item?.image == ""
+                        ? "https://via.placeholder.com/300"
                         : item?.image
                     }
                     alt='random'
